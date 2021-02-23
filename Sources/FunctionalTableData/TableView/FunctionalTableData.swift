@@ -123,7 +123,7 @@ public class FunctionalTableData {
 	/// Initializes a FunctionalTableData. To configure its view, provide a UITableView after initialization.
 	///
 	/// - Parameter name: String identifying this instance of FunctionalTableData, useful when several instances are displayed on the same screen. This value also names the queue doing all the rendering work, useful for debugging.
-	public init(name: String? = nil) {
+  public init(name: String? = nil, sectionTitles: [String] = []) {
 		self.name = name ?? "FunctionalTableDataRenderAndDiff"
 		unitTesting = NSClassFromString("XCTestCase") != nil
 		renderAndDiffQueue = OperationQueue()
@@ -133,7 +133,7 @@ public class FunctionalTableData {
 		let cellStyler = CellStyler(data: data)
 		self.data = data
 		self.cellStyler = cellStyler
-		self.dataSource = DataSource(cellStyler: cellStyler)
+    self.dataSource = DataSource(cellStyler: cellStyler, sectionTitles: sectionTitles)
 		self.delegate = Delegate(cellStyler: cellStyler)
 	}
 	

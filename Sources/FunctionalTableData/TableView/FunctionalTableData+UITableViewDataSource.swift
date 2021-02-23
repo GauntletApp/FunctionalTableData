@@ -12,10 +12,12 @@ extension FunctionalTableData {
 	class DataSource: NSObject, UITableViewDataSource {
 		private let data: TableData
 		private var cellStyler: CellStyler
+    private let sectionTitles: [String]
 		
-		init(cellStyler: CellStyler) {
+    init(cellStyler: CellStyler, sectionTitles: [String]) {
 			self.cellStyler = cellStyler
 			self.data = cellStyler.data
+      self.sectionTitles = sectionTitles
 		}
 		
 		public func numberOfSections(in tableView: UITableView) -> Int {
@@ -56,5 +58,9 @@ extension FunctionalTableData {
 			guard let cellConfig = data.sections[indexPath] else { return false }
 			return cellConfig.actions.hasEditActions || self.tableView(tableView, canMoveRowAt: indexPath) || cellConfig.style?.selected != nil
 		}
+
+    public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+      return sectionTitles
+    }
 	}
 }
