@@ -28,6 +28,16 @@ extension Array where Element: TableSectionType {
 			}
 		}
 	}
+
+  func validateTitleUniqueness(senderName: String) {
+    let sectionTitles = compactMap { $0.title }
+    if Set(sectionTitles).count != count {
+      let dupKeys = duplicateTitles()
+      let reason = "\(senderName) : Duplicate Section titles"
+      let userInfo: [String: Any] = ["Duplicates": dupKeys]
+      NSException(name: NSExceptionName.internalInconsistencyException, reason: reason, userInfo: userInfo).raise()
+    }
+  }
 }
 
 extension Array where Element: TableSectionType {
@@ -56,6 +66,10 @@ private extension Array where Element: TableSectionType {
 	func duplicateKeys() -> [String] {
 		return map { $0.key }.duplicates()
 	}
+
+  func duplicateTitles() -> [String] {
+    return compactMap { $0.title }.duplicates()
+  }
 }
 
 private extension Array where Element == CellConfigType {
