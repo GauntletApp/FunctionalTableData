@@ -12,6 +12,8 @@ import UIKit
 public protocol TableSectionType {
 	/// Unique identifier for the section.
 	var key: String { get }
+  /// Optional, unique title for this section.
+  var title: String? { get }
 	/// View object to display in the header of this section.
 	var header: TableHeaderFooterConfigType? { get }
 	/// View object to display in the footer of this section.
@@ -31,6 +33,7 @@ public protocol TableSectionType {
 /// `FunctionalTableData` deals in arrays of `TableSection` instances. Each section, at a minimum, has a string value unique within the table itself, and an array of `CellConfigType` instances that represent the items of the section. Additionally there may be a header and footer for the section.
 public struct TableSection: Sequence, TableSectionType {
 	public let key: String
+  public let title: String?
 	public var header: TableHeaderFooterConfigType? = nil
 	public var footer: TableHeaderFooterConfigType? = nil
 	public var rows: [CellConfigType]
@@ -40,8 +43,9 @@ public struct TableSection: Sequence, TableSectionType {
 	/// Callback executed when a item is manually moved by the user. It specifies the before and after index position.
 	public var didMoveRow: ((_ from: Int, _ to: Int) -> Void)?
 
-	public init(key: String, rows: [CellConfigType] = [], header: TableHeaderFooterConfigType? = nil, footer: TableHeaderFooterConfigType? = nil, style: SectionStyle? = nil, didMoveRow: ((_ from: Int, _ to: Int) -> Void)? = nil) {
+  public init(key: String, title: String? = nil, rows: [CellConfigType] = [], header: TableHeaderFooterConfigType? = nil, footer: TableHeaderFooterConfigType? = nil, style: SectionStyle? = nil, didMoveRow: ((_ from: Int, _ to: Int) -> Void)? = nil) {
 		self.key = key
+    self.title = title
 		self.rows = rows
 		self.header = header
 		self.footer = footer
@@ -177,7 +181,7 @@ extension Array where Element: TableSectionType {
 
 extension TableSection: Equatable {
 	public static func ==(lhs: TableSection, rhs: TableSection) -> Bool {
-		return lhs.key == rhs.key &&
+    return lhs.key == rhs.key && lhs.title == rhs.title &&
 			(lhs.header == nil && rhs.header == nil || lhs.header?.isEqual(rhs.header) ?? false) &&
 			(lhs.footer == nil && rhs.footer == nil || lhs.footer?.isEqual(rhs.footer) ?? false) &&
 			isEqual(lhs: lhs.rows, rhs: rhs.rows) &&
