@@ -237,17 +237,6 @@ public class FunctionalTableData {
 						exceptionHandler.handle(exception: exception)
 					}
 				})
-        NSException.catchAndRethrow({
-          newSections.validateTitleUniqueness(senderName: strongSelf.name)
-        }, failure: {
-          if $0.name == NSExceptionName.internalInconsistencyException {
-            guard let exceptionHandler = FunctionalTableData.exceptionHandler else { return }
-            let changes = TableSectionChangeSet()
-            let viewFrame = DispatchQueue.main.sync { strongSelf.tableView?.frame ?? .zero }
-            let exception = Exception(name: $0.name.rawValue, newSections: newSections, oldSections: strongSelf.data.sections, changes: changes, visible: [], viewFrame: viewFrame, reason: $0.reason, userInfo: $0.userInfo)
-            exceptionHandler.handle(exception: exception)
-          }
-        })
 			}
 			
 			strongSelf.doRenderAndDiff(newSections, animated: animated, animations: animations, completion: completion)
